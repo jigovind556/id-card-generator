@@ -14,6 +14,9 @@ import PlaceholderPage from "./pages/PlaceholderPage";
 import StudentForm from "./pages/StudentForm";
 import StudentUpload from "./pages/StudentUpload";
 import StudentPreview from "./pages/StudentPreview";
+import TeacherForm from "./pages/TeacherForm";
+import TeacherUpload from "./pages/TeacherUpload";
+import TeacherPreview from "./pages/TeacherPreview";
 
 const queryClient = new QueryClient();
 
@@ -30,9 +33,9 @@ const App = () => (
               <Route path="/students/add" element={<StudentForm />} />
               <Route path="/students/upload" element={<StudentUpload />} />
               <Route path="/students/preview" element={<StudentPreview />} />
-              <Route path="/teachers/add" element={<PlaceholderPage title="Add Single Teacher" />} />
-              <Route path="/teachers/upload" element={<PlaceholderPage title="Upload Teachers Excel" />} />
-              <Route path="/teachers/preview" element={<PlaceholderPage title="Preview Teacher Cards" />} />
+              <Route path="/teachers/add" element={<TeacherForm />} />
+              <Route path="/teachers/upload" element={<TeacherUpload />} />
+              <Route path="/teachers/preview" element={<TeacherPreview />} />
               {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
               <Route path="*" element={<NotFound />} />
             </Routes>
