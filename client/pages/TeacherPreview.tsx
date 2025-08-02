@@ -160,7 +160,7 @@ const TeacherPreview: React.FC = () => {
 
       {/* ID Cards Preview */}
       <div ref={printRef} className="print-container">
-        <style jsx global>{`
+        <style>{`
           @media print {
             .teacher-card-row {
               display: flex;
