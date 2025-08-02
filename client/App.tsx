@@ -11,6 +11,9 @@ import NotFound from "./pages/NotFound";
 import Layout from "./components/Layout";
 import { DataProvider } from "./context/DataContext";
 import PlaceholderPage from "./pages/PlaceholderPage";
+import StudentForm from "./pages/StudentForm";
+import StudentUpload from "./pages/StudentUpload";
+import StudentPreview from "./pages/StudentPreview";
 
 const queryClient = new QueryClient();
 
@@ -24,9 +27,9 @@ const App = () => (
           <Layout>
             <Routes>
               <Route path="/" element={<Dashboard />} />
-              <Route path="/students/add" element={<PlaceholderPage title="Add Single Student" />} />
-              <Route path="/students/upload" element={<PlaceholderPage title="Upload Students Excel" />} />
-              <Route path="/students/preview" element={<PlaceholderPage title="Preview Student Cards" />} />
+              <Route path="/students/add" element={<StudentForm />} />
+              <Route path="/students/upload" element={<StudentUpload />} />
+              <Route path="/students/preview" element={<StudentPreview />} />
               <Route path="/teachers/add" element={<PlaceholderPage title="Add Single Teacher" />} />
               <Route path="/teachers/upload" element={<PlaceholderPage title="Upload Teachers Excel" />} />
               <Route path="/teachers/preview" element={<PlaceholderPage title="Preview Teacher Cards" />} />
