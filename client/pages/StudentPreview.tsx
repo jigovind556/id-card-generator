@@ -13,7 +13,7 @@ const StudentPreview: React.FC = () => {
   const printRef = useRef<HTMLDivElement>(null);
 
   const handlePrint = useReactToPrint({
-    content: () => printRef.current,
+    contentRef: printRef,
     documentTitle: 'Student ID Cards',
     pageStyle: `
       @page {
