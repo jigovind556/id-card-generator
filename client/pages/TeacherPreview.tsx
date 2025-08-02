@@ -1,11 +1,11 @@
-import React, { useRef } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { useData } from '@/context/DataContext';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import IDCard from '@/components/IDCard';
-import { useReactToPrint } from 'react-to-print';
-import { ArrowLeft, Printer, Plus, Users } from 'lucide-react';
+import React, { useRef } from "react";
+import { useNavigate } from "react-router-dom";
+import { useData } from "@/context/DataContext";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import IDCard from "@/components/IDCard";
+import { useReactToPrint } from "react-to-print";
+import { ArrowLeft, Printer, Plus, Users } from "lucide-react";
 
 const TeacherPreview: React.FC = () => {
   const navigate = useNavigate();
@@ -14,7 +14,7 @@ const TeacherPreview: React.FC = () => {
 
   const handlePrint = useReactToPrint({
     contentRef: printRef,
-    documentTitle: 'Teacher ID Cards',
+    documentTitle: "Teacher ID Cards",
     pageStyle: `
       @page {
         size: A4;
@@ -42,7 +42,7 @@ const TeacherPreview: React.FC = () => {
           display: none !important;
         }
       }
-    `
+    `,
   });
 
   // Group teachers into pairs for printing (2 per row)
@@ -58,14 +58,16 @@ const TeacherPreview: React.FC = () => {
           <Button
             variant="outline"
             size="sm"
-            onClick={() => navigate('/')}
+            onClick={() => navigate("/")}
             className="flex items-center space-x-2"
           >
             <ArrowLeft className="h-4 w-4" />
             <span>Back to Dashboard</span>
           </Button>
           <div>
-            <h1 className="text-3xl font-bold text-gray-900">Teacher ID Cards</h1>
+            <h1 className="text-3xl font-bold text-gray-900">
+              Teacher ID Cards
+            </h1>
             <p className="text-gray-600">Preview and print teacher ID cards</p>
           </div>
         </div>
@@ -73,16 +75,21 @@ const TeacherPreview: React.FC = () => {
         <Card className="text-center py-12">
           <CardContent>
             <Users className="h-16 w-16 text-gray-400 mx-auto mb-4" />
-            <h3 className="text-xl font-semibold text-gray-900 mb-2">No Teachers Found</h3>
+            <h3 className="text-xl font-semibold text-gray-900 mb-2">
+              No Teachers Found
+            </h3>
             <p className="text-gray-600 mb-6">
               Add teachers to the system to generate and preview their ID cards.
             </p>
             <div className="space-x-4">
-              <Button onClick={() => navigate('/teachers/add')}>
+              <Button onClick={() => navigate("/teachers/add")}>
                 <Plus className="h-4 w-4 mr-2" />
                 Add Single Teacher
               </Button>
-              <Button variant="outline" onClick={() => navigate('/teachers/upload')}>
+              <Button
+                variant="outline"
+                onClick={() => navigate("/teachers/upload")}
+              >
                 Upload Excel File
               </Button>
             </div>
@@ -99,20 +106,24 @@ const TeacherPreview: React.FC = () => {
           <Button
             variant="outline"
             size="sm"
-            onClick={() => navigate('/')}
+            onClick={() => navigate("/")}
             className="flex items-center space-x-2"
           >
             <ArrowLeft className="h-4 w-4" />
             <span>Back to Dashboard</span>
           </Button>
           <div>
-            <h1 className="text-3xl font-bold text-gray-900">Teacher ID Cards</h1>
-            <p className="text-gray-600">Preview and print {teachers.length} teacher ID cards</p>
+            <h1 className="text-3xl font-bold text-gray-900">
+              Teacher ID Cards
+            </h1>
+            <p className="text-gray-600">
+              Preview and print {teachers.length} teacher ID cards
+            </p>
           </div>
         </div>
-        
+
         <div className="no-print space-x-4">
-          <Button variant="outline" onClick={() => navigate('/teachers/add')}>
+          <Button variant="outline" onClick={() => navigate("/teachers/add")}>
             <Plus className="h-4 w-4 mr-2" />
             Add Teacher
           </Button>
@@ -174,10 +185,13 @@ const TeacherPreview: React.FC = () => {
             }
           }
         `}</style>
-        
+
         <div className="space-y-4">
           {teacherPairs.map((pair, index) => (
-            <div key={index} className="teacher-card-row flex justify-center gap-5">
+            <div
+              key={index}
+              className="teacher-card-row flex justify-center gap-5"
+            >
               {pair.map((teacher) => (
                 <IDCard
                   key={teacher.id}
@@ -211,8 +225,12 @@ const TeacherPreview: React.FC = () => {
             {teachers.map((teacher) => (
               <div key={teacher.id} className="border rounded-lg p-3">
                 <h4 className="font-medium">{teacher.name}</h4>
-                <p className="text-sm text-gray-600">Designation: {teacher.designation}</p>
-                <p className="text-sm text-gray-600">Subject: {teacher.subject}</p>
+                <p className="text-sm text-gray-600">
+                  Designation: {teacher.designation}
+                </p>
+                <p className="text-sm text-gray-600">
+                  Subject: {teacher.subject}
+                </p>
               </div>
             ))}
           </div>

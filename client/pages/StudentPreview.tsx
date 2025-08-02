@@ -1,11 +1,11 @@
-import React, { useRef } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { useData } from '@/context/DataContext';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import IDCard from '@/components/IDCard';
-import { useReactToPrint } from 'react-to-print';
-import { ArrowLeft, Printer, Plus, Users } from 'lucide-react';
+import React, { useRef } from "react";
+import { useNavigate } from "react-router-dom";
+import { useData } from "@/context/DataContext";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import IDCard from "@/components/IDCard";
+import { useReactToPrint } from "react-to-print";
+import { ArrowLeft, Printer, Plus, Users } from "lucide-react";
 
 const StudentPreview: React.FC = () => {
   const navigate = useNavigate();
@@ -14,7 +14,7 @@ const StudentPreview: React.FC = () => {
 
   const handlePrint = useReactToPrint({
     contentRef: printRef,
-    documentTitle: 'Student ID Cards',
+    documentTitle: "Student ID Cards",
     pageStyle: `
       @page {
         size: A4;
@@ -38,7 +38,7 @@ const StudentPreview: React.FC = () => {
           display: none !important;
         }
       }
-    `
+    `,
   });
 
   if (students.length === 0) {
@@ -48,14 +48,16 @@ const StudentPreview: React.FC = () => {
           <Button
             variant="outline"
             size="sm"
-            onClick={() => navigate('/')}
+            onClick={() => navigate("/")}
             className="flex items-center space-x-2"
           >
             <ArrowLeft className="h-4 w-4" />
             <span>Back to Dashboard</span>
           </Button>
           <div>
-            <h1 className="text-3xl font-bold text-gray-900">Student ID Cards</h1>
+            <h1 className="text-3xl font-bold text-gray-900">
+              Student ID Cards
+            </h1>
             <p className="text-gray-600">Preview and print student ID cards</p>
           </div>
         </div>
@@ -63,16 +65,21 @@ const StudentPreview: React.FC = () => {
         <Card className="text-center py-12">
           <CardContent>
             <Users className="h-16 w-16 text-gray-400 mx-auto mb-4" />
-            <h3 className="text-xl font-semibold text-gray-900 mb-2">No Students Found</h3>
+            <h3 className="text-xl font-semibold text-gray-900 mb-2">
+              No Students Found
+            </h3>
             <p className="text-gray-600 mb-6">
               Add students to the system to generate and preview their ID cards.
             </p>
             <div className="space-x-4">
-              <Button onClick={() => navigate('/students/add')}>
+              <Button onClick={() => navigate("/students/add")}>
                 <Plus className="h-4 w-4 mr-2" />
                 Add Single Student
               </Button>
-              <Button variant="outline" onClick={() => navigate('/students/upload')}>
+              <Button
+                variant="outline"
+                onClick={() => navigate("/students/upload")}
+              >
                 Upload Excel File
               </Button>
             </div>
@@ -89,20 +96,24 @@ const StudentPreview: React.FC = () => {
           <Button
             variant="outline"
             size="sm"
-            onClick={() => navigate('/')}
+            onClick={() => navigate("/")}
             className="flex items-center space-x-2"
           >
             <ArrowLeft className="h-4 w-4" />
             <span>Back to Dashboard</span>
           </Button>
           <div>
-            <h1 className="text-3xl font-bold text-gray-900">Student ID Cards</h1>
-            <p className="text-gray-600">Preview and print {students.length} student ID cards</p>
+            <h1 className="text-3xl font-bold text-gray-900">
+              Student ID Cards
+            </h1>
+            <p className="text-gray-600">
+              Preview and print {students.length} student ID cards
+            </p>
           </div>
         </div>
-        
+
         <div className="no-print space-x-4">
-          <Button variant="outline" onClick={() => navigate('/students/add')}>
+          <Button variant="outline" onClick={() => navigate("/students/add")}>
             <Plus className="h-4 w-4 mr-2" />
             Add Student
           </Button>
@@ -160,7 +171,7 @@ const StudentPreview: React.FC = () => {
             }
           }
         `}</style>
-        
+
         <div className="space-y-4">
           {students.map((student) => (
             <div key={student.id} className="card-row flex justify-center">
@@ -195,7 +206,9 @@ const StudentPreview: React.FC = () => {
               <div key={student.id} className="border rounded-lg p-3">
                 <h4 className="font-medium">{student.name}</h4>
                 <p className="text-sm text-gray-600">Class: {student.class}</p>
-                <p className="text-sm text-gray-600">Roll No: {student.rollNo}</p>
+                <p className="text-sm text-gray-600">
+                  Roll No: {student.rollNo}
+                </p>
               </div>
             ))}
           </div>
