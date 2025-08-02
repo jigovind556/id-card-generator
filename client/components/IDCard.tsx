@@ -43,7 +43,7 @@ const IDCard: React.FC<IDCardProps> = ({
 }) => {
   return (
     <div className="id-card">
-      <style jsx>{`
+      <style>{`
         .id-card {
           width: 486px;
           height: 306px;
