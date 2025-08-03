@@ -5,14 +5,28 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>ID Card Generator</title>
     <script type="text/javascript">
-      // Check if we have a redirect from 404.html
+      // Handle redirects from 404.html
       (function() {
         var redirect = localStorage.getItem('spa-redirect');
         if (redirect && redirect !== '') {
-          // Clear the redirect
+          // Clear the redirect from localStorage
           localStorage.removeItem('spa-redirect');
-          // Redirect to the correct path
-          history.replaceState(null, null, redirect);
+          
+          // Make sure the redirect starts with a slash
+          if (redirect && !redirect.startsWith('/')) {
+            redirect = '/' + redirect;
+          }
+          
+          // Replace the current state with the redirect path
+          var basePath = '/id-card-generator';
+          
+          // Remove the basePath if it's at the beginning of the redirect
+          if (redirect.startsWith(basePath)) {
+            redirect = redirect.substring(basePath.length);
+          }
+          
+          // Use the full base path + redirect path
+          history.replaceState(null, null, basePath + redirect);
         }
       })();
     </script>

@@ -8,23 +8,37 @@
     // MIT License
     // Modified from https://github.com/rafgraph/spa-github-pages
     (function() {
-      // This works by storing the URL fragment in localStorage, redirecting to the root path,
-      // and then having the root path script check for this stored value and redirect if found
-      var pathSegmentsToKeep = 1;
-
-      var l = window.location;
-      var redirectPath = l.pathname.split('/').slice(0, pathSegmentsToKeep + 1).join('/') + '/';
+      // This script handles routing for GitHub Pages SPA deployments
       
-      // Store the current path (without the base path)
-      var path = l.pathname.split('/').slice(pathSegmentsToKeep).join('/');
+      var l = window.location;
+      var repoName = '/id-card-generator';
+      
+      // Check if the path starts with the repo name (could be duplicated)
+      var fullPath = l.pathname;
+      
+      // Extract everything after the first occurrence of the repo name
+      var repoNameIndex = fullPath.indexOf(repoName);
+      var pathAfterRepo = '';
+      
+      if (repoNameIndex !== -1) {
+        // Get the path after the repo name
+        pathAfterRepo = fullPath.substring(repoNameIndex + repoName.length);
+        
+        // Remove any duplicate repo names in the path
+        if (pathAfterRepo.startsWith(repoName)) {
+          pathAfterRepo = pathAfterRepo.substring(repoName.length);
+        }
+      }
+      
+      // Include search params and hash
       var searchParams = l.search || '';
       var hash = l.hash || '';
       
-      // Store the full path
-      localStorage.setItem('spa-redirect', path + searchParams + hash);
-
-      // Redirect to the root
-      l.replace(redirectPath);
+      // Store the path to redirect to
+      localStorage.setItem('spa-redirect', pathAfterRepo + searchParams + hash);
+      
+      // Redirect to the root of the GitHub Pages site
+      l.replace(repoName + '/');
     })();
   </script>
 </head>
