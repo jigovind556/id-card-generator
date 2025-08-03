@@ -28,7 +28,6 @@ export interface TeacherExcelRow {
   Address?: string;
   'Teacher ID'?: string;
   'Photo URL'?: string;
-  'Principal Sign URL'?: string;
 }
 
 export const parseStudentExcel = (file: File): Promise<Omit<Student, 'id'>[]> => {
@@ -95,8 +94,7 @@ export const parseTeacherExcel = (file: File): Promise<Omit<Teacher, 'id'>[]> =>
           bloodGroup: row['Blood Group'] || '',
           address: row.Address || '',
           teacherId: row['Teacher ID'] || '',
-          photoURL: row['Photo URL'] || '',
-          principalSignURL: row['Principal Sign URL'] || ''
+          photoURL: row['Photo URL'] || ''
         }));
         
         resolve(teachers);
@@ -146,7 +144,7 @@ export const downloadExcelTemplate = (type: 'student' | 'teacher') => {
   const teacherHeaders = [
     'Name', 'Designation', 'Subject', 'Date of Joining', 'Date of Birth',
     'Aadhar No', 'Phone', 'Blood Group', 'Address', 'Teacher ID',
-    'Photo URL', 'Principal Sign URL'
+    'Photo URL'
   ];
   
   const headers = type === 'student' ? studentHeaders : teacherHeaders;

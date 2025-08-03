@@ -237,7 +237,6 @@ const TeacherUpload: React.FC = () => {
                 <li>• Address</li>
                 <li>• Teacher ID</li>
                 <li>• Photo URL</li>
-                <li>• Principal Sign URL</li>
               </ul>
             </div>
 

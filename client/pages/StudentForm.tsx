@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useData } from '@/context/DataContext';
 import { Button } from '@/components/ui/button';
@@ -7,12 +7,13 @@ import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { useToast } from '@/hooks/use-toast';
-import { Save, ArrowLeft } from 'lucide-react';
+import { Save, ArrowLeft, Upload, X } from 'lucide-react';
 
 const StudentForm: React.FC = () => {
   const navigate = useNavigate();
   const { addStudent } = useData();
   const { toast } = useToast();
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   const [formData, setFormData] = useState({
     name: '',
@@ -28,6 +29,9 @@ const StudentForm: React.FC = () => {
     apaarId: '',
     photoURL: ''
   });
+  
+  const [selectedImage, setSelectedImage] = useState<File | null>(null);
+  const [previewURL, setPreviewURL] = useState<string>('');
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
@@ -35,6 +39,57 @@ const StudentForm: React.FC = () => {
       ...prev,
       [name]: value
     }));
+  };
+
+  const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      // Check if the file is an image
+      if (!file.type.startsWith('image/')) {
+        toast({
+          title: "Invalid file type",
+          description: "Please select an image file",
+          variant: "destructive"
+        });
+        return;
+      }
+
+      setSelectedImage(file);
+      
+      // Create a preview URL
+      const url = URL.createObjectURL(file);
+      setPreviewURL(url);
+
+      // Convert the image to base64 data URL
+      const reader = new FileReader();
+      reader.onload = () => {
+        if (reader.result) {
+          setFormData(prev => ({
+            ...prev,
+            photoURL: reader.result as string
+          }));
+        }
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+  const handleRemoveImage = () => {
+    setSelectedImage(null);
+    setPreviewURL('');
+    setFormData(prev => ({
+      ...prev,
+      photoURL: ''
+    }));
+    if (fileInputRef.current) {
+      fileInputRef.current.value = '';
+    }
+  };
+
+  const triggerFileInput = () => {
+    if (fileInputRef.current) {
+      fileInputRef.current.click();
+    }
   };
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -71,6 +126,11 @@ const StudentForm: React.FC = () => {
       apaarId: '',
       photoURL: ''
     });
+    setSelectedImage(null);
+    setPreviewURL('');
+    if (fileInputRef.current) {
+      fileInputRef.current.value = '';
+    }
   };
 
   return (
@@ -162,15 +222,42 @@ const StudentForm: React.FC = () => {
                 </div>
 
                 <div className="space-y-2">
-                  <Label htmlFor="photoURL">Photo URL (Optional)</Label>
-                  <Input
-                    id="photoURL"
-                    name="photoURL"
-                    type="url"
-                    value={formData.photoURL}
-                    onChange={handleChange}
-                    placeholder="https://example.com/photo.jpg"
+                  <Label htmlFor="photoUpload">Photo Upload</Label>
+                  <input
+                    type="file"
+                    id="photoUpload"
+                    ref={fileInputRef}
+                    onChange={handleImageUpload}
+                    accept="image/*"
+                    className="hidden"
                   />
+                  
+                  {previewURL ? (
+                    <div className="relative w-40 h-48 border rounded-md overflow-hidden">
+                      <img 
+                        src={previewURL} 
+                        alt="Photo preview" 
+                        className="w-full h-full object-cover"
+                      />
+                      <button
+                        type="button"
+                        onClick={handleRemoveImage}
+                        className="absolute top-1 right-1 bg-red-500 text-white rounded-full p-1"
+                        title="Remove image"
+                      >
+                        <X className="h-4 w-4" />
+                      </button>
+                    </div>
+                  ) : (
+                    <div 
+                      onClick={triggerFileInput}
+                      className="border-2 border-dashed border-gray-300 rounded-md p-4 text-center cursor-pointer hover:bg-gray-50"
+                    >
+                      <Upload className="h-8 w-8 text-gray-400 mx-auto mb-2" />
+                      <p className="text-sm text-gray-600">Click to upload an image</p>
+                      <p className="text-xs text-gray-500 mt-1">JPG, PNG, or GIF files</p>
+                    </div>
+                  )}
                 </div>
               </div>
 

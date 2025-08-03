@@ -1,16 +1,29 @@
-import React, { useRef } from "react";
+import React, { useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useData } from "@/context/DataContext";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import IDCard from "@/components/IDCard";
 import { useReactToPrint } from "react-to-print";
-import { ArrowLeft, Printer, Plus, Users } from "lucide-react";
+import { ArrowLeft, Printer, Plus, Users, Edit, Trash2, AlertCircle } from "lucide-react";
+import { useToast } from "@/hooks/use-toast";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 
 const TeacherPreview: React.FC = () => {
   const navigate = useNavigate();
-  const { teachers } = useData();
+  const { teachers, deleteTeacher } = useData();
+  const { toast } = useToast();
   const printRef = useRef<HTMLDivElement>(null);
+  const [teacherToDelete, setTeacherToDelete] = useState<string | null>(null);
 
   const handlePrint = useReactToPrint({
     contentRef: printRef,
@@ -46,10 +59,10 @@ const TeacherPreview: React.FC = () => {
   });
 
   // Group teachers into pairs for printing (2 per row)
-  const teacherPairs = [];
-  for (let i = 0; i < teachers.length; i += 2) {
-    teacherPairs.push(teachers.slice(i, i + 2));
-  }
+  // const teacherPairs = [];
+  // for (let i = 0; i < teachers.length; i += 2) {
+  //   teacherPairs.push(teachers.slice(i, i + 2));
+  // }
 
   if (teachers.length === 0) {
     return (
@@ -187,29 +200,43 @@ const TeacherPreview: React.FC = () => {
         `}</style>
 
         <div className="space-y-4">
-          {teacherPairs.map((pair, index) => (
+          {teachers.map((teacher, index) => (
             <div
               key={index}
               className="teacher-card-row flex justify-center gap-5"
             >
-              {pair.map((teacher) => (
-                <IDCard
-                  key={teacher.id}
-                  name={teacher.name}
-                  designation={teacher.designation}
-                  subject={teacher.subject}
-                  doj={teacher.doj}
-                  dob={teacher.dob}
-                  aadhar={teacher.aadhar}
-                  phone={teacher.phone}
-                  bloodGroup={teacher.bloodGroup}
-                  address={teacher.address}
-                  teacherId={teacher.teacherId}
-                  photoURL={teacher.photoURL}
-                  principalSignURL={teacher.principalSignURL}
-                  isTeacher={true}
-                />
-              ))}
+              {/* {pair.map((teacher) => ( */}
+              <IDCard
+                key={`1-${teacher.id}`}
+                name={teacher.name}
+                designation={teacher.designation}
+                subject={teacher.subject}
+                doj={teacher.doj}
+                dob={teacher.dob}
+                aadhar={teacher.aadhar}
+                phone={teacher.phone}
+                bloodGroup={teacher.bloodGroup}
+                address={teacher.address}
+                teacherId={teacher.teacherId}
+                photoURL={teacher.photoURL}
+                isTeacher={true}
+              />
+              <IDCard
+                key={teacher.id}
+                name={teacher.name}
+                designation={teacher.designation}
+                subject={teacher.subject}
+                doj={teacher.doj}
+                dob={teacher.dob}
+                aadhar={teacher.aadhar}
+                phone={teacher.phone}
+                bloodGroup={teacher.bloodGroup}
+                address={teacher.address}
+                teacherId={teacher.teacherId}
+                photoURL={teacher.photoURL}
+                isTeacher={true}
+              />
+              {/* ))} */}
             </div>
           ))}
         </div>
@@ -224,19 +251,86 @@ const TeacherPreview: React.FC = () => {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             {teachers.map((teacher) => (
               <div key={teacher.id} className="border rounded-lg p-3">
-                <h4 className="font-medium">{teacher.name}</h4>
-                <p className="text-sm text-gray-600">
-                  Designation: {teacher.designation}
-                </p>
-                <p className="text-sm text-gray-600">
-                  Subject: {teacher.subject}
-                </p>
+                <div className="flex justify-between items-start">
+                  <div>
+                    <h4 className="font-medium">{teacher.name}</h4>
+                    <p className="text-sm text-gray-600">
+                      Designation: {teacher.designation}
+                    </p>
+                    <p className="text-sm text-gray-600">
+                      Subject: {teacher.subject}
+                    </p>
+                  </div>
+                  <div className="flex space-x-2">
+                    <Button 
+                      variant="outline" 
+                      size="sm" 
+                      className="h-8 w-8 p-0"
+                      onClick={() => navigate(`/teachers/edit/${teacher.id}`)}
+                    >
+                      <Edit className="h-4 w-4 text-blue-500" />
+                      <span className="sr-only">Edit</span>
+                    </Button>
+                    <Button 
+                      variant="outline" 
+                      size="sm" 
+                      className="h-8 w-8 p-0" 
+                      onClick={() => setTeacherToDelete(teacher.id)}
+                    >
+                      <Trash2 className="h-4 w-4 text-red-500" />
+                      <span className="sr-only">Delete</span>
+                    </Button>
+                  </div>
+                </div>
               </div>
             ))}
           </div>
         </CardContent>
       </Card>
+      
+      {/* Delete Confirmation Dialog */}
+      <DeleteConfirmationDialog
+        isOpen={!!teacherToDelete}
+        onClose={() => setTeacherToDelete(null)}
+        onConfirm={() => {
+          if (teacherToDelete) {
+            deleteTeacher(teacherToDelete);
+            toast({
+              title: "Teacher deleted",
+              description: "The teacher has been successfully deleted.",
+            });
+            setTeacherToDelete(null);
+          }
+        }}
+      />
     </div>
+  );
+};
+
+// Delete confirmation dialog
+const DeleteConfirmationDialog: React.FC<{
+  isOpen: boolean;
+  onClose: () => void;
+  onConfirm: () => void;
+}> = ({ isOpen, onClose, onConfirm }) => {
+  return (
+    <AlertDialog open={isOpen} onOpenChange={onClose}>
+      <AlertDialogContent>
+        <AlertDialogHeader>
+          <AlertDialogTitle>Are you sure?</AlertDialogTitle>
+          <AlertDialogDescription>
+            This will permanently delete this teacher's ID card.
+            This action cannot be undone.
+          </AlertDialogDescription>
+        </AlertDialogHeader>
+        <AlertDialogFooter>
+          <AlertDialogCancel>Cancel</AlertDialogCancel>
+          <AlertDialogAction onClick={onConfirm} className="bg-red-600 hover:bg-red-700">
+            Delete
+          </AlertDialogAction>
+        </AlertDialogFooter>
+      </AlertDialogContent>
+    </AlertDialog>
   );
 };
 

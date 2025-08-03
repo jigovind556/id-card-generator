@@ -29,7 +29,6 @@ export interface Teacher {
   address: string;
   teacherId: string;
   photoURL?: string;
-  principalSignURL?: string;
 }
 
 interface DataContextType {
@@ -39,6 +38,10 @@ interface DataContextType {
   addTeacher: (teacher: Omit<Teacher, 'id'>) => void;
   addMultipleStudents: (students: Omit<Student, 'id'>[]) => void;
   addMultipleTeachers: (teachers: Omit<Teacher, 'id'>[]) => void;
+  updateStudent: (id: string, student: Omit<Student, 'id'>) => void;
+  updateTeacher: (id: string, teacher: Omit<Teacher, 'id'>) => void;
+  deleteStudent: (id: string) => void;
+  deleteTeacher: (id: string) => void;
 }
 
 const DataContext = createContext<DataContextType | undefined>(undefined);
@@ -109,6 +112,26 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
     setTeachers(prev => [...prev, ...newTeachers]);
   };
 
+  const updateStudent = (id: string, studentData: Omit<Student, 'id'>) => {
+    setStudents(prev => 
+      prev.map(student => student.id === id ? { ...studentData, id } : student)
+    );
+  };
+
+  const updateTeacher = (id: string, teacherData: Omit<Teacher, 'id'>) => {
+    setTeachers(prev => 
+      prev.map(teacher => teacher.id === id ? { ...teacherData, id } : teacher)
+    );
+  };
+
+  const deleteStudent = (id: string) => {
+    setStudents(prev => prev.filter(student => student.id !== id));
+  };
+
+  const deleteTeacher = (id: string) => {
+    setTeachers(prev => prev.filter(teacher => teacher.id !== id));
+  };
+
   return (
     <DataContext.Provider
       value={{
@@ -117,7 +140,11 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
         addStudent,
         addTeacher,
         addMultipleStudents,
-        addMultipleTeachers
+        addMultipleTeachers,
+        updateStudent,
+        updateTeacher,
+        deleteStudent,
+        deleteTeacher
       }}
     >
       {children}
